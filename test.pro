@@ -31,5 +31,7 @@ HEADERS += \
         mainwindow.h
 
 LIBS += -LD:\opencv_build\install\x64\vc17\lib -lopencv_core455d -lopencv_imgproc455d -lopencv_highgui455d -lopencv_imgcodecs455d -lopencv_videoio455d -lopencv_video455d -lopencv_calib3d455d -lopencv_photo455d -lopencv_features2d455d
+
+LIBS += -luser32 -ladvapi32 -lgdi32 -lcomdlg32
 INCLUDEPATH += D:\opencv_build\install\include
 DEPENDPATH += D:\opencv_build\install\include
