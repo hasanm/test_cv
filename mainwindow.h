@@ -8,11 +8,20 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QSettings>
+#include <QImage> 
 #include "opencv2/opencv.hpp"
 
-namespace Ui {
-class MainWindow;
-}
+QT_BEGIN_NAMESPACE
+class QAction;
+class QActionGroup;
+class QLabel;
+class QMenu;
+class QComboBox;
+class QVBoxLayout;
+class QIcon;
+class QTableWidget;
+class QGridLayout;
+QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
@@ -23,19 +32,20 @@ public:
     ~MainWindow();
 
 protected:
-    void closeEvent(QCloseEvent *event);
 
 private slots:
     void on_inputPushButton_pressed();
-
+    void onStart();
+    void onStop(); 
     void on_outputPushButton_pressed();
 
 private:
-    Ui::MainWindow *ui;
-
-    void loadSettings();
-    void saveSettings();
-
+    QPushButton *quitButton;
+    QPushButton *startButton;
+    QPushButton *stopButton; 
+    QVBoxLayout *contentLayout;
+    QImage image;
+    QLabel *imageLabel;    
 };
 
 #endif // MAINWINDOW_H
