@@ -1,6 +1,6 @@
 #include <QtWidgets>
 #include <QLabel>
-#include <QVBoxLayout> 
+#include <QVBoxLayout>
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QIcon>
@@ -89,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   stopButton = new QPushButton(QString("Stop CV"), this);
   connect (stopButton, &QPushButton::clicked, this, &MainWindow::onStop);
-  topLayout->addWidget(stopButton);  
+  topLayout->addWidget(stopButton);
 
   /* Content Layout */
   contentLayout = new QVBoxLayout(content);
@@ -102,12 +102,12 @@ MainWindow::MainWindow(QWidget *parent) :
   QVBoxLayout *rootLayout = new QVBoxLayout(root);
   rootLayout->addWidget(top);
   rootLayout->addWidget(content);
-  setCentralWidget(root); 
+  setCentralWidget(root);
 }
 
 MainWindow::~MainWindow()
 {
-  
+
 }
 
 void MainWindow::onStart() {
@@ -115,7 +115,7 @@ void MainWindow::onStart() {
   cv::VideoCapture camera(0);
   if (!camera.isOpened()) {
     qDebug() << "ERROR: Could not open camera";
-    return; 
+    return;
   }
 
   // create a window to display the images from the webcam
@@ -123,20 +123,31 @@ void MainWindow::onStart() {
 
   // this will contain the image from the webcam
   cv::Mat frame;
-        
+  cv::Mat dst;
+
   // capture the next frame from the webcam
   camera >> frame;
 
-  QPixmap pixmap = QPixmap::fromImage(QImage((unsigned char*) frame.data, frame.cols, frame.rows, QImage::Format_BGR888));
+  // cv::Mat kernel = (cv::Mat_<char>(3,3) <<  0, -1,  0,
+  //                                          -1,  5, -1,
+  //                                           0, -1,  0);
+
+  cv::Mat kernel = (cv::Mat_<char>(3,3) <<  0, -1,  0,
+                                           -1,  4, -1,
+                                            0, -1,  0);
+
+  filter2D(frame, dst, frame.depth(), kernel);
+
+  QPixmap pixmap = QPixmap::fromImage(QImage((unsigned char*) dst.data, dst.cols, dst.rows, QImage::Format_BGR888));
   imageLabel->setPixmap(pixmap);
-  
+
   // QImageReader reader("d:/work/qt/game_overlay/img/food.png");
   // reader.setAutoTransform(true);
   // const QImage newImage = reader.read();
   // image = newImage;
   // imageLabel->setPixmap(QPixmap::fromImage(image));
-  
-    
+
+
   // // display the frame until you press a key
   // while (1) {
   //   // show the image on the window
@@ -149,13 +160,13 @@ void MainWindow::onStart() {
 
   // Mat image;
   // image = imread("d:/work/qt/game_overlay/img/food.png", IMREAD_COLOR);
-  // 
+  //
   // if( image.empty() ) // Check for invalid input
   //   {
-  //     qDebug() << "Could not open or find the image"; 
-  // 
+  //     qDebug() << "Could not open or find the image";
+  //
   //   }
-  // 
+  //
   // namedWindow( "Display window", WINDOW_AUTOSIZE ); // Create a window for display.
   // imshow( "Display window", image ); // Show our image inside it.
   // waitKey(0); // Wait for a keystroke in the window
@@ -176,14 +187,14 @@ void MainWindow::onStop() {
 
   buf.clear();
 
-} 
+}
 
 void MainWindow::on_inputPushButton_pressed()
 {
     QString fileName = QFileDialog::getOpenFileName(this, "Open Input Image", QDir::currentPath(), "Images (*.jpg *.png *.bmp)");
     if(QFile::exists(fileName))
     {
-      
+
     }
 }
 
