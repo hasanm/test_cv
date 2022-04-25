@@ -140,36 +140,6 @@ void MainWindow::onStart() {
 
   QPixmap pixmap = QPixmap::fromImage(QImage((unsigned char*) dst.data, dst.cols, dst.rows, QImage::Format_BGR888));
   imageLabel->setPixmap(pixmap);
-
-  // QImageReader reader("d:/work/qt/game_overlay/img/food.png");
-  // reader.setAutoTransform(true);
-  // const QImage newImage = reader.read();
-  // image = newImage;
-  // imageLabel->setPixmap(QPixmap::fromImage(image));
-
-
-  // // display the frame until you press a key
-  // while (1) {
-  //   // show the image on the window
-  //   cv::imshow("Webcam", frame);
-  //   // wait (10ms) for a key to be pressed
-  //   if (cv::waitKey(10) >= 0)
-  //     break;
-  // }
-  // return;
-
-  // Mat image;
-  // image = imread("d:/work/qt/game_overlay/img/food.png", IMREAD_COLOR);
-  //
-  // if( image.empty() ) // Check for invalid input
-  //   {
-  //     qDebug() << "Could not open or find the image";
-  //
-  //   }
-  //
-  // namedWindow( "Display window", WINDOW_AUTOSIZE ); // Create a window for display.
-  // imshow( "Display window", image ); // Show our image inside it.
-  // waitKey(0); // Wait for a keystroke in the window
 }
 
 void MainWindow::onStop() {
@@ -178,14 +148,27 @@ void MainWindow::onStop() {
   HWND hwnd = GetDesktopWindow();
   Mat src = captureScreenMat(hwnd);
 
+
   // encode result
-  std::vector<uchar> buf;
-  cv::imencode(".png", src, buf);
+  // std::vector<uchar> buf;
+  // cv::imencode(".png", src, buf);
 
   // save img
   cv::imwrite("d:/work/qt/test_cv/screenshot.png", src);
 
-  buf.clear();
+  // Mat tmp  = cv::imread("d:/work/qt/test_cv/screenshot.png", cv::IMREAD_GRAYSCALE);
+  // Rect r(10, 10, 600, 600);
+  // Mat small (src, r);
+  // cv::cvtColor(src, src, cv::COLOR_BGRA2RGBA);
+  Rect r(2500, 50, 600, 100);
+  Mat small;
+  src(r).copyTo(small);
+  cv::cvtColor(small, small, cv::COLOR_BGRA2RGBA);
+  qDebug() << small.cols << " : " << small.rows;
+  QPixmap pixmap = QPixmap::fromImage(QImage((unsigned char*)small.data, small.cols, small.rows, QImage::Format_RGBA8888));
+  imageLabel->setPixmap(pixmap);
+
+  // buf.clear();
 
 }
 
